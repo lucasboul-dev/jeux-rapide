@@ -86,7 +86,7 @@ export function mountBattle(root: HTMLElement, setup: BattleSetup, onEnd: (r: Ba
   let last: number | null = null;
   let clock = 0;
   const ctx = canvas.getContext('2d');
-  const cam = createCamera(FALLBACK_SIZE.width / renderScale(FALLBACK_SIZE.height));
+  const cam = createCamera(FALLBACK_SIZE.width / renderScale(FALLBACK_SIZE.width, FALLBACK_SIZE.height));
 
   function setArmed(value: boolean): void {
     armed = value;
@@ -122,14 +122,14 @@ export function mountBattle(root: HTMLElement, setup: BattleSetup, onEnd: (r: Ba
     const dx = e.clientX - pointerStart.lastX;
     pointerStart.lastX = e.clientX;
     if (Math.abs(e.clientX - pointerStart.x) > TAP_SLOP) pointerStart.moved = true;
-    if (pointerStart.moved) dragCamera(cam, -dx / renderScale(size().height), clock);
+    if (pointerStart.moved) dragCamera(cam, -dx / scaleNow(), clock);
   });
   canvas.addEventListener('pointerup', (e) => {
     const wasTap = pointerStart && !pointerStart.moved;
     pointerStart = null;
     if (!wasTap || !armed) return;
     const rect = canvas.getBoundingClientRect();
-    const worldX = screenToWorld(cam, e.clientX - rect.left, renderScale(size().height));
+    const worldX = screenToWorld(cam, e.clientX - rect.left, scaleNow());
     if (fireCannon(state, worldX)) setArmed(false);
   });
 
@@ -141,13 +141,18 @@ export function mountBattle(root: HTMLElement, setup: BattleSetup, onEnd: (r: Ba
     };
   }
 
+  function scaleNow(): number {
+    const { width, height } = size();
+    return renderScale(width, height);
+  }
+
   function resizeCanvas(): void {
     const { width, height } = size();
     const dpr = globalThis.devicePixelRatio || 1;
     if (canvas.width !== Math.round(width * dpr)) canvas.width = Math.round(width * dpr);
     if (canvas.height !== Math.round(height * dpr)) canvas.height = Math.round(height * dpr);
     ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
-    cam.viewWidth = width / renderScale(height);
+    cam.viewWidth = width / renderScale(width, height);
   }
 
   function updateHud(): void {

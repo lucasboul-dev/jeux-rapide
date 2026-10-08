@@ -7,9 +7,11 @@ import { jimeeById } from '../data/jimees';
 import type { Camera } from './camera';
 import { ENEMY_BASE_X, ROCKET_X, type BattleEvent, type BattleState, type Unit } from './types';
 
-/** Hauteur visible du terrain, en unités du terrain. */
+/** Hauteur de la scène (ciel + sol), en unités du terrain. */
 export const VIEW_HEIGHT = 260;
 export const GROUND_Y = 215;
+/** Largeur visible visée : environ un tiers du terrain, comme le veut la spec. */
+export const TARGET_VIEW_WIDTH = 400;
 
 interface Effect {
   event: BattleEvent;
@@ -27,9 +29,12 @@ const LIFETIME: Record<BattleEvent['kind'], number> = {
 /** Effets visuels en cours, par bataille (les événements de la simulation sont consommés à chaque image). */
 const effects = new WeakMap<BattleState, Effect[]>();
 
-/** Échelle écran / terrain pour une hauteur de canvas donnée. */
-export function renderScale(height: number): number {
-  return height / VIEW_HEIGHT;
+/**
+ * Échelle écran / terrain : on montre environ TARGET_VIEW_WIDTH unités de large,
+ * sans dépasser la hauteur de la scène sur un écran très large.
+ */
+export function renderScale(width: number, height: number): number {
+  return Math.min(height / VIEW_HEIGHT, width / TARGET_VIEW_WIDTH);
 }
 
 function laneOffset(u: Unit): number {
@@ -117,10 +122,14 @@ export function renderBattle(
   cam: Camera,
   size: { width: number; height: number },
 ): void {
-  const scale = renderScale(size.height);
+  const scale = renderScale(size.width, size.height);
   ctx.save();
   ctx.clearRect(0, 0, size.width, size.height);
+  ctx.fillStyle = state.setup.planet.palette.sky;
+  ctx.fillRect(0, 0, size.width, size.height);
   ctx.scale(scale, scale);
+  // La scène est posée en bas du canvas ; l'espace restant au-dessus est du ciel.
+  ctx.translate(0, Math.max(0, size.height / scale - VIEW_HEIGHT));
   drawBackground(ctx, state.setup.planet, cam.x, size.width / scale, VIEW_HEIGHT, GROUND_Y);
   ctx.translate(-cam.x, 0);
   drawRocket(ctx, ROCKET_X, GROUND_Y, state.rocketHp / state.setup.rocket.hp);
