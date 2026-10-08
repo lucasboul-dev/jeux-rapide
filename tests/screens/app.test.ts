@@ -55,3 +55,14 @@ describe('démarrage', () => {
     expect(root.querySelector<HTMLButtonElement>('[data-planet="2"]')!.disabled).toBe(true);
   });
 });
+
+describe('écrans du guichet', () => {
+  it('le guichet mène au distributeur et à la fusée', () => {
+    startApp(root, fakeStorage());
+    root.querySelector<HTMLButtonElement>('[data-go="capsules"]')!.click();
+    expect(root.querySelector('.capsules')).not.toBeNull();
+    root.querySelector<HTMLButtonElement>('.back')!.click();
+    root.querySelector<HTMLButtonElement>('[data-go="rocket"]')!.click();
+    expect(root.querySelector('.rocket')).not.toBeNull();
+  });
+});

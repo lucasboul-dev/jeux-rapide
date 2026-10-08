@@ -2,10 +2,12 @@ import { representativeSvg } from '../art/representative';
 import { mountBattle } from '../battle/battleScreen';
 import { createRng, randomSeed, type Rng } from '../economy/rng';
 import { loadGame, resetGame, saveGame, type SaveData } from '../save/save';
+import * as capsules from './capsules';
 import * as counter from './counter';
 import * as map from './map';
 import * as prepare from './prepare';
 import * as results from './results';
+import * as rocket from './rocket';
 import { button, el, speech } from './ui';
 
 export type ScreenName = 'counter' | 'map' | 'prepare' | 'battle' | 'results' | 'capsules' | 'rocket';
@@ -27,12 +29,9 @@ const SCREENS: Partial<Record<ScreenName, ScreenRender>> = {
   map: map.render,
   prepare: prepare.render,
   results: results.render,
+  capsules: capsules.render,
+  rocket: rocket.render,
 };
-
-/** Enregistre un écran supplémentaire (distributeur, fusée…). */
-export function registerScreen(name: ScreenName, render: ScreenRender): void {
-  SCREENS[name] = render;
-}
 
 /** Démarre le jeu dans `root` à partir du stockage du téléphone (ou `null` s'il est indisponible). */
 export function startApp(root: HTMLElement, storage: Storage | null): AppContext {
