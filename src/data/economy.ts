@@ -1,0 +1,41 @@
+import type { Rarity } from './types';
+
+/** Valeurs chiffrées de la spec (section 5). Ajustables ici sans toucher au moteur. */
+export const ECONOMY = {
+  drawCost: 100,
+  buybackCredits: 25,
+  maxLevel: 10,
+  maxCrystalsPerDraw: 3,
+  baseOdds: { common: 60, rare: 28, epic: 10, legendary: 2 } as Record<Rarity, number>,
+  crystalShift: { common: -12, rare: 6, epic: 4, legendary: 2 } as Record<Rarity, number>,
+  planetBonusPerPlanet: 50,
+  replayFactor: 0.4,
+  crystalDropChance: 0.1,
+  upgradeBaseCost: 80,
+  upgradeGrowth: 1.5,
+  maxUpgradeLevel: 10,
+  teamSlots: 4,
+  rarityCurve: {
+    common: { base: 100, gain: 0.1 },
+    rare: { base: 125, gain: 0.15 },
+    epic: { base: 150, gain: 0.22 },
+    legendary: { base: 180, gain: 0.35 },
+  } as Record<Rarity, { base: number; gain: number }>,
+  rocket: {
+    hp: 600,
+    chargeMax: 10,
+    chargeRate: 1,
+    chargeRatePerLevel: 0.15,
+    chargeMaxPerLevel: 2,
+    turretDamage: 12,
+    turretRange: 160,
+    turretInterval: 1,
+    turretPerLevel: 0.15,
+    cannonDamage: 80,
+    cannonRadius: 70,
+    cannonCooldown: 30,
+    cannonDamagePerLevel: 0.15,
+    cannonCooldownPerLevel: 1.5,
+  },
+  startingCollection: { standard: 1, lanceur: 1 } as Record<string, number>,
+} as const;
