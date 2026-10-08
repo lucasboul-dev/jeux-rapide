@@ -87,9 +87,26 @@ Le joueur possède la fusée (tous les niveaux à 1) et 2 modèles communs : le 
 ### Fusion
 - Un modèle tiré pour la première fois est débloqué au niveau 1, avec l'annonce « Nouveau ! ».
 - Un doublon est **fusionné automatiquement** : le modèle gagne 1 niveau.
-- Chaque niveau donne **+10 %** de vie et de dégâts par rapport au niveau 1 (niveau n : ×(1 + 0,1 × (n − 1))).
-- Niveau maximum : 10. Un doublon d'un modèle déjà au niveau 10 est repris par la Corp contre **25 crédits**, « à prix d'ami (pour elle) ».
+- Niveau maximum : 10. Un modèle niveau 10 **reste toujours dans la collection** et reste disponible pour composer l'équipe ; on peut en posséder autant qu'on veut.
+- Un doublon d'un modèle déjà au niveau 10 ne peut plus rien améliorer : seul ce doublon est repris par la Corp contre **25 crédits**, « à prix d'ami (pour elle) ». Le modèle n'est pas touché.
 - C'est le **seul** moyen d'améliorer un modèle de Jimee.
+
+### Équilibre rareté / niveau
+Principe : un commun bien monté doit pouvoir rivaliser avec un légendaire tout juste obtenu, pour que le farm soit récompensé et que les planètes restent faisables ; mais un légendaire doit vite passer devant dès qu'on l'améliore, pour qu'on ait envie de le monter.
+
+Pour cela, la puissance de base (vie et dégâts) **et** le gain par niveau dépendent de la rareté. Puissance au niveau n : `base × (1 + gain × (n − 1))`.
+
+| Rareté | Puissance de base | Gain par niveau | Niveau 1 | Niveau 2 | Niveau 10 |
+|---|---|---|---|---|---|
+| Commun | 100 | +10 % | 100 | 110 | 190 |
+| Rare | 125 | +15 % | 125 | 144 | 294 |
+| Épique | 150 | +22 % | 150 | 183 | 447 |
+| Légendaire | 180 | +35 % | 180 | 243 | 747 |
+
+- Un commun niveau 10 (190) est légèrement plus fort qu'un légendaire niveau 1 (180).
+- Un légendaire niveau 2 (243) passe nettement devant un commun niveau 10.
+- La « puissance » est un indice moyen : chaque modèle répartit ensuite sa puissance entre vie, dégâts, vitesse et portée selon son rôle (un Costaud a plus de vie, un Sprinteur plus de vitesse).
+- Les planètes sont réglées pour être faisables avec une équipe de communs bien montés et un peu de farm ; les modèles rares font avancer plus vite.
 
 ### Fusée
 Quatre améliorations, achetées en crédits, niveaux 1 à 10. Coût pour passer du niveau n au niveau n + 1 : `80 × 1,5^(n − 1)`, arrondi à la dizaine.
@@ -177,7 +194,7 @@ Mémorial, *Le Jimee illustré*, album des apparences, coupons de deuil et « co
 ## 8. Tests
 
 - **Vitest**, lancé en local et dans la GitHub Action.
-- **Économie** : probabilités pour 0 à 3 cristaux (somme à 100 %), répartition des tirages sur un grand échantillon avec graine fixe, fusion et plafond au niveau 10, reprise à 25 crédits, gains en première conquête, en farm (×0,4) et en défaite, coûts d'amélioration.
+- **Économie** : probabilités pour 0 à 3 cristaux (somme à 100 %), répartition des tirages sur un grand échantillon avec graine fixe, fusion et plafond au niveau 10, reprise à 25 crédits sans retirer le modèle de la collection, courbe de puissance par rareté (valeurs du tableau de la section 5), gains en première conquête, en farm (×0,4) et en défaite, coûts d'amélioration.
 - **Simulation** : déplacement et arrêt à portée, dégâts, mort, chaque capacité, tourelle, canon et recharge, coût en chargement, conditions de victoire et de défaite.
 - **Sauvegarde** : aller-retour, sauvegarde illisible, stockage indisponible, migration.
 - Le rendu et les écrans sont vérifiés en jouant sur téléphone.
