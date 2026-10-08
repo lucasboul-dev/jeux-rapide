@@ -42,12 +42,12 @@ export const PLANETS: Planet[] = [
   {
     id: 8, name: 'Décharge-Majeure', biome: 'décharge',
     palette: { sky: '#d6cbb8', ground: '#7a6e5d', accent: '#4e463b', creature: '#cddc39' },
-    baseHp: 1100, enemyPool: BASIC, waveInterval: 5.5, waveSize: 4, statMultiplier: 2,
+    baseHp: 1100, enemyPool: BASIC, waveInterval: 5.5, waveSize: 3, statMultiplier: 1.85,
   },
   {
     id: 9, name: 'Nébuleuse', biome: 'nuages',
     palette: { sky: '#f0e1f0', ground: '#c7b5d6', accent: '#8e7aa8', creature: '#ff7043' },
-    baseHp: 1250, enemyPool: BASIC, waveInterval: 5, waveSize: 4, statMultiplier: 2.2,
+    baseHp: 1200, enemyPool: BASIC, waveInterval: 5.5, waveSize: 3, statMultiplier: 1.95,
   },
   {
     id: 10, name: "Tour Jimmy's", biome: "siège de Jimmy's Inc.",
