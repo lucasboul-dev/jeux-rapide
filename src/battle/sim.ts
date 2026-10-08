@@ -1,7 +1,9 @@
 import { ENEMIES } from '../data/enemies';
+import { jimeeById } from '../data/jimees';
 import { unitStats } from '../economy/power';
 import { createRng, pick } from '../economy/rng';
 import { landProjectile, onDamage, onDeath, onSpawn, tickAbilities, tickTurret } from './abilities';
+export { fireCannon } from './abilities';
 import {
   BOSS_TIME,
   ENEMY_BASE_X,
@@ -163,7 +165,7 @@ function act(state: BattleState, u: Unit, dt: number): void {
 
   const targetX = target === 'base' ? baseX : target.x;
   if (u.ranged) {
-    const def = u.side === 'jimee' ? state.setup.team.find((s) => s?.model.id === u.defId)?.model : undefined;
+    const ability = u.side === 'jimee' ? jimeeById(u.defId).ability : undefined;
     const projectile: Projectile = {
       fromX: u.x,
       toX: targetX,
@@ -172,7 +174,7 @@ function act(state: BattleState, u: Unit, dt: number): void {
       damage: u.damage,
       targetId: target === 'base' ? null : target.id,
     };
-    if (def?.ability?.kind === 'splash') projectile.splash = def.ability.radius;
+    if (ability?.kind === 'splash') projectile.splash = ability.radius;
     state.projectiles.push(projectile);
   } else if (target === 'base') {
     damageBase(state, opponent(u.side), u.damage);
