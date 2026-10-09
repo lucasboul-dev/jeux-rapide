@@ -3,6 +3,8 @@ import { JIMEES, jimeeById } from '../../src/data/jimees';
 import { ECONOMY } from '../../src/data/economy';
 import { unitStats } from '../../src/economy/power';
 import type { JimeeModel, Rarity } from '../../src/data/types';
+import { ENEMIES } from '../../src/data/enemies';
+import { planetById } from '../../src/data/planets';
 
 /**
  * Force de combat par point de chargement, au niveau 1 :
@@ -11,7 +13,9 @@ import type { JimeeModel, Rarity } from '../../src/data/types';
 function scorePerPoint(m: JimeeModel): number {
   const s = unitStats(m, 1);
   const shield = m.ability?.kind === 'shield' ? m.ability.amountFactor * s.hp : 0;
-  return ((s.hp + shield) / m.cost) * (s.damage / s.attackInterval / m.cost);
+  // Un tir de zone touche en moyenne plusieurs ennemis : environ 1 + rayon / 40.
+  const targets = m.ability?.kind === 'splash' ? 1 + m.ability.radius / 40 : 1;
+  return ((s.hp + shield) / m.cost) * ((s.damage * targets) / s.attackInterval / m.cost);
 }
 
 const SUPPORTS = ['mecano', 'infirmier', 'ralentisseur'];
@@ -46,6 +50,14 @@ describe('équilibre des Jimees', () => {
     }
     for (const m of JIMEES.filter((x) => x.rarity !== 'legendary')) {
       expect(m.cost, m.name).toBeLessThanOrEqual(ECONOMY.rocket.chargeMax);
+    }
+  });
+
+  it('aucun Jimee de niveau 1 ne tue d’un seul coup un ennemi de base de la planète 5', () => {
+    const p5 = planetById(5);
+    const weakest = Math.min(...['blob', 'cracheur'].map((id) => ENEMIES[id].stats.hp * p5.statMultiplier));
+    for (const m of JIMEES) {
+      expect(unitStats(m, 1).damage, m.name).toBeLessThan(weakest * 0.75);
     }
   });
 });
