@@ -1395,3 +1395,137 @@ div.collection-item {
   background: #dccfb2;
   color: #2a2a33;
 }
+
+/* Liste de choix : cartes avec statistiques comparables */
+
+.collection-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sort-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.sort-bar button {
+  min-height: 34px;
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.sort-bar button.selected {
+  background: var(--orange);
+  color: var(--navy);
+}
+
+.collection > .jimee-card {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  align-items: start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--navy-2);
+}
+
+.card-portrait {
+  width: 52px;
+  height: 60px;
+  border-radius: 10px;
+  background: #fbfaf5;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.card-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ability-tag {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #3a2f63;
+  color: #d6c9ff;
+}
+
+.card-tags .capacity-warning {
+  font-size: 11px;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+  margin-top: 2px;
+}
+
+.stat {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  column-gap: 6px;
+  font-size: 12px;
+}
+
+.stat-label {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.stat-value {
+  font-weight: 800;
+  font-size: 14px;
+  text-align: right;
+}
+
+.stat-bar {
+  grid-column: 1 / -1;
+  height: 5px;
+  margin-top: 2px;
+  border-radius: 3px;
+  background: var(--navy);
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.stat-hp .stat-bar-fill { background: var(--green); }
+.stat-dps .stat-bar-fill { background: var(--red); }

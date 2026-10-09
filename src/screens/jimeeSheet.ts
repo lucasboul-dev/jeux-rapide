@@ -51,6 +51,28 @@ export function abilityText(model: JimeeModel, level: number): string | null {
   }
 }
 
+/** Étiquette courte de la capacité spéciale, pour les listes ; `null` s'il n'y en a pas. */
+export function abilityTag(model: JimeeModel): string | null {
+  const a = model.ability;
+  if (!a) return null;
+  switch (a.kind) {
+    case 'explodeOnDeath':
+      return 'Explose à sa mort';
+    case 'heal':
+      return 'Soigne les alliés';
+    case 'shield':
+      return 'Bouclier';
+    case 'splash':
+      return 'Tir de zone';
+    case 'repairRocket':
+      return 'Répare la fusée';
+    case 'slow':
+      return 'Ralentit';
+    case 'aura':
+      return `Aura +${Math.round(a.damageBonus * 100)} % dégâts`;
+  }
+}
+
 export interface SheetAction {
   label: string;
   disabled?: boolean;

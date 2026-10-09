@@ -84,3 +84,51 @@ describe('légendaire trop cher pour la fusée', () => {
     expect(root.querySelector('[data-model="standard"]')!.textContent).not.toContain('Capacité insuffisante');
   });
 });
+
+import { unitStats } from '../../src/economy/power';
+import { jimeeById } from '../../src/data/jimees';
+import { abilityTag } from '../../src/screens/jimeeSheet';
+
+describe('statistiques visibles dans la liste', () => {
+  const save = () => ({ ...newSave(), collection: { standard: 3, lanceur: 1, costaud: 2, mecano: 1 } });
+
+  it('chaque Jimee affiche vie, dégâts/s, portée et vitesse sans ouvrir sa fiche', () => {
+    const root = document.createElement('div');
+    render(root, testContext(save()), { planetId: 1 });
+    const item = root.querySelector('[data-model="costaud"]')!;
+    const s = unitStats(jimeeById('costaud'), 2);
+    expect(item.querySelector('.stat-hp .stat-value')!.textContent).toBe(String(Math.round(s.hp)));
+    expect(item.querySelector('.stat-dps .stat-value')!.textContent).toBe((s.damage / s.attackInterval).toLocaleString('fr-FR', { maximumFractionDigits: 1 }));
+    expect(item.querySelector('.stat-range .stat-value')!.textContent).toBe('Mêlée');
+    expect(root.querySelector('[data-model="lanceur"] .stat-range .stat-value')!.textContent).toBe('140');
+    expect(root.querySelector('.jimee-sheet')).toBeNull();
+  });
+
+  it('les barres sont proportionnelles au meilleur Jimee de la liste', () => {
+    const root = document.createElement('div');
+    render(root, testContext(save()), { planetId: 1 });
+    const width = (id: string) => (root.querySelector(`[data-model="${id}"] .stat-hp .stat-bar-fill`) as HTMLElement).style.width;
+    expect(width('costaud')).toBe('100%');
+    expect(parseFloat(width('standard'))).toBeLessThan(100);
+  });
+
+  it('la capacité spéciale apparaît en étiquette', () => {
+    const root = document.createElement('div');
+    render(root, testContext(save()), { planetId: 1 });
+    expect(root.querySelector('[data-model="mecano"] .ability-tag')!.textContent).toBe(abilityTag(jimeeById('mecano')));
+    expect(root.querySelector('[data-model="standard"] .ability-tag')).toBeNull();
+  });
+
+  it('on peut trier par dégâts/s', () => {
+    const root = document.createElement('div');
+    render(root, testContext(save()), { planetId: 1 });
+    root.querySelector<HTMLButtonElement>('[data-sort="dps"]')!.click();
+    const ids = [...root.querySelectorAll<HTMLElement>('.collection [data-model]')].map((e) => e.dataset.model!);
+    const dps = (id: string) => {
+      const s = unitStats(jimeeById(id), save().collection[id as keyof ReturnType<typeof save>['collection']]);
+      return s.damage / s.attackInterval;
+    };
+    expect(ids.map(dps)).toEqual([...ids.map(dps)].sort((a, b) => b - a));
+    expect(root.querySelector('[data-sort="dps"]')!.classList.contains('selected')).toBe(true);
+  });
+});
