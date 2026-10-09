@@ -37,6 +37,8 @@ export interface Unit {
   hp: number;
   maxHp: number;
   shield: number;
+  /** Bouclier de départ (0 si l'unité n'en a pas). */
+  maxShield: number;
   damage: number;
   speed: number;
   range: number;

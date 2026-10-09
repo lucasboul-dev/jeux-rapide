@@ -45,13 +45,14 @@ export function createBattle(setup: BattleSetup): BattleState {
   };
 }
 
-function addUnit(state: BattleState, unit: Omit<Unit, 'id' | 'cooldown' | 'abilityTimer' | 'shield' | 'engaged' | 'slowTimer' | 'slowFactor'>): Unit {
+function addUnit(state: BattleState, unit: Omit<Unit, 'id' | 'cooldown' | 'abilityTimer' | 'shield' | 'maxShield' | 'engaged' | 'slowTimer' | 'slowFactor'>): Unit {
   const full: Unit = {
     ...unit,
     id: state.nextId++,
     cooldown: 0,
     abilityTimer: 0,
     shield: 0,
+    maxShield: 0,
     engaged: false,
     slowTimer: 0,
     slowFactor: 1,

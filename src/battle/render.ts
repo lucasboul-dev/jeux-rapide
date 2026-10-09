@@ -43,6 +43,22 @@ function laneOffset(u: Unit): number {
   return (u.id % 4) * 4;
 }
 
+export interface UnitBar {
+  kind: 'hp' | 'shield';
+  ratio: number;
+}
+
+/**
+ * Barres à afficher au-dessus d'une unité : la vie (si elle est entamée, ou si l'unité a un bouclier)
+ * et le bouclier, chacun par rapport à son propre maximum.
+ */
+export function unitBars(u: Unit): UnitBar[] {
+  const bars: UnitBar[] = [];
+  if (u.hp < u.maxHp || u.maxShield > 0) bars.push({ kind: 'hp', ratio: Math.max(0, u.hp / u.maxHp) });
+  if (u.shield > 0) bars.push({ kind: 'shield', ratio: u.shield / u.maxShield });
+  return bars;
+}
+
 function drawUnit(ctx: CanvasRenderingContext2D, state: BattleState, u: Unit): void {
   const y = GROUND_Y + laneOffset(u);
   const walking = !u.engaged;
@@ -63,8 +79,10 @@ function drawUnit(ctx: CanvasRenderingContext2D, state: BattleState, u: Unit): v
     drawEnemy(ctx, u.x, y, ENEMIES[u.defId], state.setup.planet.palette, { facing: -1, walkPhase });
     top = y - (u.isBoss ? 78 : 44);
   }
-  if (u.hp < u.maxHp) healthBar(ctx, u.x, top, u.isBoss ? 40 : 22, u.hp / u.maxHp, u.side === 'jimee' ? '#2bb673' : '#e4572e');
-  if (u.shield > 0) healthBar(ctx, u.x, top - 5, 22, u.shield / u.maxHp, '#3fa7d6');
+  for (const bar of unitBars(u)) {
+    if (bar.kind === 'hp') healthBar(ctx, u.x, top, u.isBoss ? 40 : 22, bar.ratio, u.side === 'jimee' ? '#2bb673' : '#e4572e');
+    else healthBar(ctx, u.x, top - 5, 22, bar.ratio, '#3fa7d6');
+  }
 }
 
 function drawProjectiles(ctx: CanvasRenderingContext2D, state: BattleState): void {

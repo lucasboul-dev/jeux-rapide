@@ -14,7 +14,10 @@ function unitsWithin(state: BattleState, side: Unit['side'], x: number, radius: 
 /** Le Blindé apparaît avec son bouclier. */
 export function onSpawn(_state: BattleState, unit: Unit): void {
   const ability = abilityOf(unit);
-  if (ability?.kind === 'shield') unit.shield = ability.amountFactor * unit.maxHp;
+  if (ability?.kind === 'shield') {
+    unit.shield = ability.amountFactor * unit.maxHp;
+    unit.maxShield = unit.shield;
+  }
 }
 
 /** Le bouclier absorbe en premier ; renvoie les dégâts retirés aux points de vie. */
