@@ -1,3 +1,4 @@
+import { crystalIcon } from '../art/representative';
 import type { SaveData } from '../save/save';
 
 /** Crée un élément avec sa classe et, au besoin, son texte. */
@@ -21,10 +22,10 @@ export function button(text: string, className: string, onClick: () => void): HT
 /** Soldes du capitaine, toujours visibles en chiffres. */
 export function walletBar(save: SaveData): HTMLElement {
   const bar = el('div', 'wallet');
-  bar.append(
-    el('span', 'wallet-credits', `${save.credits.toLocaleString('fr-FR')} crédits`),
-    el('span', 'wallet-crystals', `${save.crystals} cristal${save.crystals > 1 ? 'x' : ''}`),
-  );
+  const crystals = el('span', 'wallet-crystals');
+  crystals.innerHTML = crystalIcon();
+  crystals.append(` ${save.crystals} ${save.crystals > 1 ? 'cristaux' : 'cristal'}`);
+  bar.append(el('span', 'wallet-credits', `${save.credits.toLocaleString('fr-FR')} crédits`), crystals);
   return bar;
 }
 

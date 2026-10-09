@@ -1,4 +1,4 @@
-import { representativeSvg } from '../art/representative';
+import { functionaryDesk } from '../art/representative';
 import type { BattleResult } from '../battle/battleScreen';
 import { CORP_LINES } from '../data/corpLines';
 import { ECONOMY } from '../data/economy';
@@ -39,8 +39,13 @@ export function render(root: HTMLElement, ctx: AppContext, params?: Record<strin
 
   const won = result.outcome === 'won';
   const planet = planetById(result.planetId);
-  const screen = el('div', `screen results ${won ? 'won' : 'lost'}`);
-  screen.append(el('h1', 'results-title', won ? 'Planète conquise !' : 'Mission ratée'));
+  const screen = el('div', `screen results paper ${won ? 'won' : 'lost'}`);
+  const head = el('div', 'results-head');
+  head.append(
+    el('h1', 'results-title', won ? 'Planète conquise !' : 'Mission ratée'),
+    el('span', `stamp ${won ? 'stamp-ok' : 'stamp-ko'}`, won ? 'VALIDÉ' : 'REFUSÉ'),
+  );
+  screen.append(head);
   screen.append(el('p', 'results-planet', `Planète ${planet.id} — ${planet.name}`));
 
   const gains = el('ul', 'gains');
@@ -55,14 +60,14 @@ export function render(root: HTMLElement, ctx: AppContext, params?: Record<strin
 
   const poster = el('div', 'poster');
   poster.append(
-    el('span', 'poster-kicker', 'Jimee’s Corp présente'),
+    el('span', 'poster-kicker', 'Avis officiel · Jimee’s Corp'),
     el('strong', 'poster-title', pick(ctx.rng, CORP_LINES.mourningPosterTitles)),
     el('span', 'poster-count', `En mémoire de ${result.jimeesLost} Jimee${result.jimeesLost > 1 ? 's' : ''}`),
   );
   screen.append(poster);
 
-  const rep = el('div', 'results-rep');
-  rep.innerHTML = representativeSvg();
+  const rep = el('div', 'results-rep desk-rep');
+  rep.innerHTML = functionaryDesk();
   rep.append(speech(pick(ctx.rng, won ? CORP_LINES.victory : CORP_LINES.defeat)));
   screen.append(rep);
 

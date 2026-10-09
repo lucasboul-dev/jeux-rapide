@@ -29,7 +29,7 @@ export function render(root: HTMLElement, ctx: AppContext, params?: Record<strin
   const rerender = () => render(root, ctx, { view });
   const { enabled, odds } = drawButtonState(ctx.save, view.crystals);
 
-  const screen = el('div', 'screen capsules');
+  const screen = el('div', 'screen capsules paper');
   screen.append(topBar('Distributeur de capsules', () => ctx.go('counter'), ctx.save));
 
   screen.append(machine(view.last));
@@ -118,6 +118,7 @@ function resultPanel(outcome: DrawOutcome, line: string): HTMLElement {
     drawJimee(c2d, 24, 44, model, { facing: 1, walkPhase: 0, scale: 1 });
   }
   const text = el('div', 'draw-text');
+  panel.append(el('span', 'stamp stamp-ok', 'LIVRÉ'));
   if (outcome.kind === 'new') text.append(el('span', 'new-badge', 'Nouveau !'));
   text.append(el('strong', '', model.name), el('small', '', RARITY_LABELS[model.rarity]));
   if (outcome.kind === 'levelUp') text.append(el('span', 'draw-detail', `Fusion : niveau ${outcome.level}`));

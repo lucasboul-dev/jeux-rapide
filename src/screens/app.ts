@@ -1,4 +1,4 @@
-import { representativeSvg } from '../art/representative';
+import { functionaryCloseup } from '../art/representative';
 import { mountBattle } from '../battle/battleScreen';
 import { createRng, randomSeed, type Rng } from '../economy/rng';
 import { loadGame, resetGame, saveGame, type SaveData } from '../save/save';
@@ -91,12 +91,12 @@ function resetPreview(): SaveData {
 }
 
 function showCorrupt(host: HTMLElement, onReset: () => void): void {
-  const screen = el('div', 'screen corrupt');
+  const screen = el('div', 'screen corrupt paper');
   const rep = el('div', 'results-rep');
-  rep.innerHTML = representativeSvg();
+  rep.innerHTML = functionaryCloseup();
   rep.append(
     speech(
-      'Votre dossier de capitaine est illisible. Simple formalité : nous pouvons vous en ouvrir un nouveau, gratuitement (pour cette fois).',
+      'Votre dossier de capitaine est illisible. Je vais devoir en ouvrir un nouveau. Gratuitement, pour cette fois. Ne recommencez pas.',
     ),
   );
   screen.append(

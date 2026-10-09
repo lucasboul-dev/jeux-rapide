@@ -1080,3 +1080,318 @@ div.collection-item {
   color: var(--red) !important;
   font-weight: 700;
 }
+
+/* ---------- Écrans de la Corp : style papier administratif ---------- */
+
+.paper {
+  --paper: #f2ead7;
+  --paper-2: #e7dcc4;
+  --paper-3: #dccfb2;
+  --ink: #2a2a33;
+  --slate: #3f4d5a;
+  --uniform: #7d8e9e;
+  --holo: #9fe3f0;
+  --stamp-red: #c0392b;
+  --stamp-green: #2e7d4f;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.paper button {
+  background: var(--paper-3);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+.paper button.primary {
+  background: var(--slate);
+  color: var(--paper);
+}
+
+.paper button.danger {
+  background: var(--stamp-red);
+  color: var(--paper);
+}
+
+.paper .wallet span {
+  background: var(--paper-2);
+  border: 1.5px solid var(--ink);
+}
+
+.paper .wallet-credits {
+  color: #8a5a00;
+}
+
+.paper .wallet-crystals {
+  color: var(--slate);
+}
+
+.wallet-crystals {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.crystal-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.paper .hint,
+.paper .section-title,
+.paper .results-planet,
+.paper .gain-note,
+.paper .collection-text small,
+.paper .upgrade-level {
+  color: #6b6455;
+}
+
+.paper .speech {
+  background: #fffdf7;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  font-style: normal;
+}
+
+.paper .speech::before {
+  border-right-color: var(--ink);
+}
+
+/* Guichet */
+
+.paper .booth {
+  background: var(--paper-2);
+  border: 2px solid var(--ink);
+}
+
+.paper .booth-sign {
+  background: var(--slate);
+  color: var(--paper);
+  letter-spacing: 0.04em;
+}
+
+.paper .booth-scene {
+  grid-template-columns: 96px 1fr;
+}
+
+.functionary,
+.functionary-desk,
+.functionary-closeup {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.desk {
+  position: relative;
+  margin-top: -4px;
+  padding: 12px 14px 14px;
+  background: #e2d4b6;
+  border-top: 3px solid var(--ink);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.holo-form {
+  width: 64px;
+  height: 40px;
+  transform: skewX(-18deg);
+  background: linear-gradient(transparent 30%, rgba(79, 184, 204, 0.6) 30% 36%, transparent 36% 52%, rgba(79, 184, 204, 0.6) 52% 58%, transparent 58%),
+    rgba(159, 227, 240, 0.45);
+  border: 1.5px solid #4fb8cc;
+  border-radius: 3px;
+  animation: holo 2.4s ease-in-out infinite;
+}
+
+@keyframes holo {
+  50% { opacity: 0.6; transform: skewX(-18deg) translateY(-2px); }
+}
+
+.nameplate {
+  flex: 1;
+  max-width: 230px;
+  padding: 8px 10px;
+  background: #fffdf7;
+  border: 2px solid var(--ink);
+  clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%);
+  font-size: 12px;
+  font-weight: 700;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* Tampons */
+
+.stamp {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 3px solid currentColor;
+  border-radius: 6px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transform: rotate(-8deg);
+  opacity: 0.88;
+  animation: stamp-in 0.35s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+.stamp-ok { color: var(--stamp-green, #2e7d4f); }
+.stamp-ko { color: var(--stamp-red, #c0392b); }
+
+@keyframes stamp-in {
+  from { transform: rotate(-8deg) scale(2.2); opacity: 0; }
+  to { transform: rotate(-8deg) scale(1); opacity: 0.88; }
+}
+
+/* Bilan */
+
+.results-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.paper.results .results-title,
+.paper.results.won .results-title {
+  color: var(--ink);
+}
+
+.paper .gains {
+  background: #fffdf7;
+  border: 2px solid var(--ink);
+}
+
+.paper .gain-credits {
+  color: #8a5a00;
+}
+
+.paper .gain-crystal {
+  color: var(--slate);
+}
+
+.paper .poster {
+  background: #fffdf7;
+  border: 2px solid var(--ink);
+  outline: 3px double var(--ink);
+  outline-offset: -8px;
+}
+
+.paper .poster-title {
+  color: var(--stamp-red);
+}
+
+.desk-rep {
+  grid-template-columns: 1fr;
+}
+
+.desk-rep .functionary-desk {
+  max-width: 340px;
+  justify-self: center;
+}
+
+/* Distributeur */
+
+.paper .odds-row,
+.paper div.collection-item,
+.paper .collection > .collection-item {
+  background: #fffdf7;
+  border: 2px solid var(--ink);
+  border-left-width: 6px;
+}
+
+.paper .crystal-label {
+  color: var(--slate);
+}
+
+.paper .crystal-choices button.selected {
+  background: var(--holo);
+  color: var(--ink);
+}
+
+.draw-result {
+  position: relative;
+}
+
+.draw-result .stamp {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  font-size: 13px;
+}
+
+.paper .draw-result {
+  border: 2px solid var(--ink);
+  border-left-width: 8px;
+}
+
+.paper .sticky-footer {
+  background: linear-gradient(transparent, var(--paper) 30%);
+}
+
+/* Fiche de Jimee : même papier que les dossiers de la Corp */
+
+.jimee-sheet {
+  background: #f2ead7;
+  color: #2a2a33;
+}
+
+.jimee-sheet .sheet-description,
+.jimee-sheet .sheet-level,
+.jimee-sheet .sheet-stats dt,
+.jimee-sheet .sheet-hint {
+  color: #4f4a40;
+}
+
+.jimee-sheet .sheet-stats {
+  background: #fffdf7;
+  border: 2px solid #2a2a33;
+}
+
+.jimee-sheet .sheet-next {
+  color: #2e7d4f;
+}
+
+.jimee-sheet .sheet-ability {
+  background: #e7dcc4;
+  border-left-color: #3f4d5a;
+}
+
+.jimee-sheet .sheet-rarity {
+  border: 1.5px solid #2a2a33;
+}
+
+.jimee-sheet .sheet-portrait {
+  border: 2px solid #2a2a33;
+  background: #fffdf7;
+}
+
+.jimee-sheet button {
+  background: #dccfb2;
+  color: #2a2a33;
+  border: 2px solid #2a2a33;
+}
+
+.jimee-sheet button.primary {
+  background: #3f4d5a;
+  color: #f2ead7;
+}
+
+.jimee-sheet .sheet-warning {
+  color: #2a2a33;
+}
+
+/* Bulles sous le fonctionnaire : pas de pointe latérale. */
+.desk-rep .speech::before,
+.draw-wrap .speech::before {
+  display: none;
+}
+
+.jimee-sheet .sheet-rarity.rarity-common {
+  background: #dccfb2;
+  color: #2a2a33;
+}

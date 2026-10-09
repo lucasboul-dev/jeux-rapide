@@ -21,8 +21,8 @@ Seul le genre est repris. Aucun graphisme, nom, son ou texte de We Are Warriors 
 ## 2. Univers (référence)
 
 - **La Jimee's Corp** (« la Corp ») fabrique des Jimees et les vend à des capitaines de fusée qui explorent les galaxies pour en rapporter des richesses. Le joueur est l'un de ces capitaines. La Corp lui confie une fusée et deux Jimees : « Prenez-en soin, ils ne sont pas remboursés. »
-- **Son représentant** : grand, chauve, gros nez, cravate rouge, mains dans les poches, toujours souriant, surtout quand les nouvelles sont mauvaises. On le voit au guichet à auvent rayé.
-- **Son ton** : vendeur cynique et très poli. Tout se vend, surtout le malheur. Mais les prix, pourcentages et risques sont toujours affichés honnêtement : c'est sa fierté commerciale.
+- **Son fonctionnaire** (nouveau design du 9 octobre 2026) : grand, maigre, chauve, gros nez tombant, yeux mi-clos et cernés, air blasé. Uniforme gris-bleu à col montant, boutons, médailles, badge à pince ; une main dans la poche, l'autre bras robotique avec un écran au poignet. Il tamponne des formulaires holographiques à son bureau, fume le cigare quand un dossier le dépasse, et sa plaque dit : « L'univers est en expansion. Notre administration aussi. » Ton : blasé et fatigué, mais fidèle au cynisme commercial de la Corp. Les écrans de la Corp (guichet, distributeur, bilan, fiches) sont en style papier administratif.
+- **Son ton** : cynique et poli, débité par un fonctionnaire las. Tout se vend, surtout le malheur. Mais les prix, pourcentages et risques sont toujours affichés honnêtement : c'est sa fierté commerciale.
 - **Les Jimees** : petits êtres fabriqués en série, livrés en capsules. Tête ovale un peu penchée, grands yeux noirs, corps rectangle blanc, pieds ovales, ceinture de couleur. Naïfs, dévoués, **jetables** : on ne s'y attache pas.
 - **Le concurrent** : Jimmy's Inc., dont les employés ont « une casquette plus chère ».
 
