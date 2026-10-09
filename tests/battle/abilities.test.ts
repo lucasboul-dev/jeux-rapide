@@ -127,3 +127,67 @@ describe('canon', () => {
     expect(fireCannon(s, 600)).toBe(false);
   });
 });
+
+describe('capacités des nouveaux modèles', () => {
+  it('le Mécano répare la fusée régulièrement, sans dépasser le maximum', () => {
+    const s = createBattle(setup());
+    const m = jimee(s, 'mecano', 200);
+    m.speed = 0;
+    s.rocketHp = s.setup.rocket.hp - 100;
+    const ability = jimeeById('mecano').ability as { amountFactor: number; interval: number };
+    const repair = ability.amountFactor * m.maxHp;
+    advanceSeconds(s, ability.interval - 0.1);
+    expect(s.rocketHp).toBeCloseTo(s.setup.rocket.hp - 100);
+    advanceSeconds(s, 0.2);
+    expect(s.rocketHp).toBeCloseTo(Math.min(s.setup.rocket.hp, s.setup.rocket.hp - 100 + repair));
+    advanceSeconds(s, 60);
+    expect(s.rocketHp).toBe(s.setup.rocket.hp);
+  });
+
+  it('le Ralentisseur ralentit les ennemis touchés, puis l’effet s’arrête', () => {
+    const s = createBattle(setup());
+    const r = jimee(s, 'ralentisseur', 300);
+    r.speed = 0;
+    r.damage = 0;
+    const e = spawnEnemy(s, 'blob', 400);
+    e.hp = e.maxHp = 10_000;
+    e.damage = 0;
+    const ability = jimeeById('ralentisseur').ability as { factor: number; duration: number };
+    advanceSeconds(s, 0.45);
+    expect(e.slowTimer).toBeGreaterThan(0);
+    const x0 = e.x;
+    advanceSeconds(s, 0.1);
+    expect(x0 - e.x).toBeCloseTo(e.speed * ability.factor * 0.1, 1);
+    r.hp = 0;
+    advanceSeconds(s, ability.duration + 0.2);
+    const x1 = e.x;
+    advanceSeconds(s, 0.1);
+    expect(x1 - e.x).toBeCloseTo(e.speed * 0.1, 1);
+  });
+
+  it('le Contremaître augmente les dégâts des Jimees proches, pas des lointains', () => {
+    const s = createBattle(setup());
+    const boss = jimee(s, 'contremaitre', 300);
+    boss.speed = 0;
+    boss.damage = 0;
+    const near = jimee(s, 'standard', 320);
+    near.speed = 0;
+    const far = jimee(s, 'standard', 700);
+    far.speed = 0;
+    const a = dummy(s, 335);
+    const b = dummy(s, 715);
+    const bonus = (jimeeById('contremaitre').ability as { damageBonus: number }).damageBonus;
+    stepBattle(s, FIXED_DT);
+    expect(10_000 - a.hp).toBeCloseTo(near.damage * (1 + bonus));
+    expect(10_000 - b.hp).toBeCloseTo(far.damage);
+  });
+
+  it('le Contremaître ne se renforce pas lui-même', () => {
+    const s = createBattle(setup());
+    const boss = jimee(s, 'contremaitre', 300);
+    boss.speed = 0;
+    const a = dummy(s, 318);
+    stepBattle(s, FIXED_DT);
+    expect(10_000 - a.hp).toBeCloseTo(boss.damage);
+  });
+});

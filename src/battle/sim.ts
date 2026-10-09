@@ -2,7 +2,7 @@ import { ENEMIES } from '../data/enemies';
 import { jimeeById } from '../data/jimees';
 import { unitStats } from '../economy/power';
 import { createRng, pick } from '../economy/rng';
-import { landProjectile, onDamage, onDeath, onSpawn, tickAbilities, tickTurret } from './abilities';
+import { applySlow, auraMultiplier, landProjectile, onDamage, onDeath, onSpawn, tickAbilities, tickTurret } from './abilities';
 export { fireCannon } from './abilities';
 import {
   BOSS_TIME,
@@ -45,8 +45,17 @@ export function createBattle(setup: BattleSetup): BattleState {
   };
 }
 
-function addUnit(state: BattleState, unit: Omit<Unit, 'id' | 'cooldown' | 'abilityTimer' | 'shield' | 'engaged'>): Unit {
-  const full: Unit = { ...unit, id: state.nextId++, cooldown: 0, abilityTimer: 0, shield: 0, engaged: false };
+function addUnit(state: BattleState, unit: Omit<Unit, 'id' | 'cooldown' | 'abilityTimer' | 'shield' | 'engaged' | 'slowTimer' | 'slowFactor'>): Unit {
+  const full: Unit = {
+    ...unit,
+    id: state.nextId++,
+    cooldown: 0,
+    abilityTimer: 0,
+    shield: 0,
+    engaged: false,
+    slowTimer: 0,
+    slowFactor: 1,
+  };
   state.units.push(full);
   onSpawn(state, full);
   return full;
@@ -157,13 +166,15 @@ function act(state: BattleState, u: Unit, dt: number): void {
     // Avance sans dépasser la portée de la prochaine cible.
     let limit = baseDistance - u.range;
     if (near) limit = Math.min(limit, near.distance - u.range);
-    u.x += dir * Math.min(u.speed * dt, Math.max(0, limit));
+    const speed = u.slowTimer > 0 ? u.speed * u.slowFactor : u.speed;
+    u.x += dir * Math.min(speed * dt, Math.max(0, limit));
     return;
   }
   if (u.cooldown > 0) return;
   u.cooldown = u.attackInterval;
 
   const targetX = target === 'base' ? baseX : target.x;
+  const damage = u.damage * auraMultiplier(state, u);
   if (u.ranged) {
     const ability = u.side === 'jimee' ? jimeeById(u.defId).ability : undefined;
     const projectile: Projectile = {
@@ -171,15 +182,16 @@ function act(state: BattleState, u: Unit, dt: number): void {
       toX: targetX,
       t: 0,
       side: u.side,
-      damage: u.damage,
+      damage,
       targetId: target === 'base' ? null : target.id,
     };
     if (ability?.kind === 'splash') projectile.splash = ability.radius;
+    if (ability?.kind === 'slow') projectile.slow = { factor: ability.factor, duration: ability.duration };
     state.projectiles.push(projectile);
   } else if (target === 'base') {
-    damageBase(state, opponent(u.side), u.damage);
+    damageBase(state, opponent(u.side), damage);
   } else {
-    dealDamage(state, target, u.damage);
+    dealDamage(state, target, damage);
   }
 }
 
@@ -192,7 +204,10 @@ function moveProjectiles(state: BattleState, dt: number): void {
       damageBase(state, opponent(p.side), p.damage);
     } else {
       const target = state.units.find((u) => u.id === p.targetId);
-      if (target) dealDamage(state, target, p.damage);
+      if (target) {
+        dealDamage(state, target, p.damage);
+        if (p.slow) applySlow(target, p.slow);
+      }
     }
   }
   state.projectiles = state.projectiles.filter((p) => p.t < 1);
@@ -246,6 +261,7 @@ export function stepBattle(state: BattleState, dt: number): void {
   state.time += dt;
   state.charge = Math.min(rocket.chargeMax, state.charge + rocket.chargeRate * dt);
   state.cannonCooldown = Math.max(0, state.cannonCooldown - dt);
+  for (const u of state.units) u.slowTimer = Math.max(0, u.slowTimer - dt);
 
   tickWaves(state, dt);
   tickTurret(state, dt);

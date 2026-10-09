@@ -17,7 +17,13 @@ export type Ability =
   /** Apparaît avec un bouclier de amountFactor × sa vie max. */
   | { kind: 'shield'; amountFactor: number }
   /** Ses tirs touchent tous les ennemis dans le rayon autour de l'impact. */
-  | { kind: 'splash'; radius: number };
+  | { kind: 'splash'; radius: number }
+  /** Toutes les `interval` s, répare la fusée de amountFactor × sa vie max. */
+  | { kind: 'repairRocket'; amountFactor: number; interval: number }
+  /** Les ennemis touchés avancent à `factor` × leur vitesse pendant `duration` s. */
+  | { kind: 'slow'; factor: number; duration: number }
+  /** Les autres Jimees dans le rayon infligent +damageBonus (ex. 0,3 = +30 %) de dégâts. */
+  | { kind: 'aura'; radius: number; damageBonus: number };
 
 export interface StatProfile {
   hp: number;
@@ -27,7 +33,21 @@ export interface StatProfile {
   attackInterval: number;
 }
 
-export type Accessory = 'none' | 'bolt' | 'helmet' | 'sneakers' | 'fuse' | 'cross' | 'plate' | 'antenna';
+export type Accessory =
+  | 'none'
+  | 'bolt'
+  | 'helmet'
+  | 'sneakers'
+  | 'fuse'
+  | 'cross'
+  | 'plate'
+  | 'antenna'
+  | 'badge'
+  | 'shield'
+  | 'satchel'
+  | 'wrench'
+  | 'hourglass'
+  | 'megaphone';
 
 export interface JimeeModel {
   id: string;

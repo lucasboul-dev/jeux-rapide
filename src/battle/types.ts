@@ -47,6 +47,10 @@ export interface Unit {
   isBoss: boolean;
   /** Vrai pendant un pas où l'unité attaque ou attend à portée (sert à l'animation). */
   engaged: boolean;
+  /** Temps restant de ralentissement (s). */
+  slowTimer: number;
+  /** Vitesse appliquée pendant le ralentissement, en fraction de `speed`. */
+  slowFactor: number;
 }
 
 export interface Projectile {
@@ -59,6 +63,7 @@ export interface Projectile {
   /** Unité visée, ou `null` si c'est la base adverse. */
   targetId: number | null;
   splash?: number;
+  slow?: { factor: number; duration: number };
 }
 
 export type BattleEvent =

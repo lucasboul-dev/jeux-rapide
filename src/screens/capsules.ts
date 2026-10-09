@@ -7,6 +7,7 @@ import { canPurchaseDraw, purchaseDraw, rarityOdds, type DrawOutcome } from '../
 import { pick } from '../economy/rng';
 import type { SaveData } from '../save/save';
 import type { AppContext } from './app';
+import { openJimeeSheet } from './jimeeSheet';
 import { button, el, speech, topBar } from './ui';
 
 /** État du bouton de tirage et probabilités à afficher pour ce nombre de cristaux. */
@@ -91,7 +92,7 @@ export function render(root: HTMLElement, ctx: AppContext, params?: Record<strin
   screen.append(footer);
 
   screen.append(el('h2', 'section-title', 'Votre collection'));
-  screen.append(collection(ctx.save));
+  screen.append(collection(ctx.save, screen));
 
   root.replaceChildren(screen);
 }
@@ -129,11 +130,13 @@ function resultPanel(outcome: DrawOutcome, line: string): HTMLElement {
   return wrap;
 }
 
-function collection(save: SaveData): HTMLElement {
+function collection(save: SaveData, host: HTMLElement): HTMLElement {
   const list = el('div', 'collection');
   for (const model of JIMEES) {
     const level = save.collection[model.id];
-    const item = el('div', `collection-item rarity-${model.rarity}${level ? '' : ' missing'}`);
+    const item = el('button', `collection-item rarity-${model.rarity}${level ? '' : ' missing'}`);
+    item.dataset.model = model.id;
+    item.addEventListener('click', () => openJimeeSheet(host, model, level));
     const dot = el('span', 'belt-dot');
     dot.style.background = level ? model.belt : 'transparent';
     const text = el('span', 'collection-text');
@@ -141,7 +144,7 @@ function collection(save: SaveData): HTMLElement {
       el('strong', '', level ? model.name : '???'),
       el('small', '', `${RARITY_LABELS[model.rarity]}${level ? ` · Niv. ${level} / ${ECONOMY.maxLevel}` : ' · pas encore obtenu'}`),
     );
-    item.append(dot, text);
+    item.append(dot, text, el('span', 'info-dot', 'i'));
     list.append(item);
   }
   return list;

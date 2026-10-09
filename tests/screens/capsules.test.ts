@@ -53,3 +53,19 @@ describe('distributeur', () => {
     expect(root.querySelector<HTMLButtonElement>('.crank')!.disabled).toBe(true);
   });
 });
+
+describe('fiches au distributeur', () => {
+  it('taper un modèle possédé ouvre sa fiche', () => {
+    const root = document.createElement('div');
+    render(root, testContext());
+    root.querySelector<HTMLElement>('[data-model="standard"]')!.click();
+    expect(root.querySelector('.jimee-sheet')!.textContent).toContain('Standard');
+  });
+
+  it('taper un modèle pas encore obtenu ouvre une fiche « ??? »', () => {
+    const root = document.createElement('div');
+    render(root, testContext());
+    root.querySelector<HTMLElement>('[data-model="contremaitre"]')!.click();
+    expect(root.querySelector('.jimee-sheet')!.textContent).toContain('???');
+  });
+});

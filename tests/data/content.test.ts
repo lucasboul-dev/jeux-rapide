@@ -5,12 +5,26 @@ import { PLANETS } from '../../src/data/planets';
 import { CORP_LINES } from '../../src/data/corpLines';
 
 describe('contenu', () => {
-  it('8 modèles, 2 par rareté, ids uniques', () => {
-    expect(JIMEES).toHaveLength(8);
-    for (const r of ['common', 'rare', 'epic', 'legendary']) {
-      expect(JIMEES.filter((j) => j.rarity === r)).toHaveLength(2);
-    }
-    expect(new Set(JIMEES.map((j) => j.id)).size).toBe(8);
+  it('14 modèles : 4 communs, 4 rares, 3 épiques, 3 légendaires, ids uniques', () => {
+    expect(JIMEES).toHaveLength(14);
+    const count = (r: string) => JIMEES.filter((j) => j.rarity === r).length;
+    expect([count('common'), count('rare'), count('epic'), count('legendary')]).toEqual([4, 4, 3, 3]);
+    expect(new Set(JIMEES.map((j) => j.id)).size).toBe(14);
+  });
+
+  it('les nouveaux modèles ont la rareté et le rôle prévus', () => {
+    expect(jimeeById('stagiaire')).toMatchObject({ rarity: 'common', cost: 1 });
+    expect(jimeeById('bouclier').rarity).toBe('common');
+    expect(jimeeById('grenadier')).toMatchObject({ rarity: 'rare', ranged: true, ability: { kind: 'splash' } });
+    expect(jimeeById('mecano')).toMatchObject({ rarity: 'rare', ability: { kind: 'repairRocket' } });
+    expect(jimeeById('ralentisseur')).toMatchObject({ rarity: 'epic', ranged: true, ability: { kind: 'slow' } });
+    expect(jimeeById('contremaitre')).toMatchObject({ rarity: 'legendary', ability: { kind: 'aura' } });
+  });
+
+  it('chaque modèle a un accessoire et une ceinture qui lui sont propres', () => {
+    expect(new Set(JIMEES.map((j) => j.belt)).size).toBe(JIMEES.length);
+    const withAccessory = JIMEES.filter((j) => j.accessory !== 'none');
+    expect(new Set(withAccessory.map((j) => j.accessory)).size).toBe(withAccessory.length);
   });
 
   it('les modèles de départ sont standard et lanceur, communs', () => {

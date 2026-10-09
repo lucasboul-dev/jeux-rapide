@@ -89,6 +89,76 @@ function drawBodyAccessory(ctx: CanvasRenderingContext2D, accessory: JimeeModel[
       roundedRect(ctx, -6.5, -21, 13, 9, 2);
       fillStroke(ctx, '#8c96a6', 0.8);
       break;
+    case 'badge': // badge de stagiaire épinglé
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(-6, -20, 7, 5);
+      ctx.strokeStyle = OUTLINE;
+      ctx.lineWidth = 0.7;
+      ctx.strokeRect(-6, -20, 7, 5);
+      ctx.fillStyle = '#3fa7d6';
+      ctx.fillRect(-5, -19, 5, 1.2);
+      break;
+    case 'shield': // grand bouclier tenu devant lui
+      ctx.beginPath();
+      ctx.moveTo(8, -24);
+      ctx.lineTo(17, -21);
+      ctx.lineTo(17, -11);
+      ctx.quadraticCurveTo(17, -3, 12.5, -1);
+      ctx.quadraticCurveTo(8, -3, 8, -11);
+      ctx.closePath();
+      fillStroke(ctx, '#5d6b7a', 1);
+      ctx.fillStyle = '#c9cede';
+      ctx.fillRect(11.5, -19, 2, 12);
+      break;
+    case 'satchel': // sacoche de boulons en bandoulière
+      ctx.strokeStyle = '#6b4226';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(-6, -22);
+      ctx.lineTo(6, -9);
+      ctx.stroke();
+      roundedRect(ctx, 3, -11, 8, 7, 1.5);
+      fillStroke(ctx, '#8b5a2b', 0.8);
+      break;
+    case 'wrench': // clé à molette
+      ctx.save();
+      ctx.translate(12, -14);
+      ctx.rotate(-0.6);
+      ctx.fillStyle = '#9aa3b2';
+      ctx.strokeStyle = OUTLINE;
+      ctx.lineWidth = 0.8;
+      ctx.fillRect(-1.2, -1, 2.4, 11);
+      ctx.strokeRect(-1.2, -1, 2.4, 11);
+      ellipse(ctx, 0, -2.5, 3.4, 3.4);
+      fillStroke(ctx, '#9aa3b2', 0.8);
+      ctx.fillStyle = '#f4f1e8';
+      ctx.fillRect(-1, -6.5, 2, 4);
+      ctx.restore();
+      break;
+    case 'hourglass': // sablier accroché à la ceinture
+      ctx.beginPath();
+      ctx.moveTo(4, -12);
+      ctx.lineTo(10, -12);
+      ctx.lineTo(7, -7.5);
+      ctx.lineTo(10, -3);
+      ctx.lineTo(4, -3);
+      ctx.lineTo(7, -7.5);
+      ctx.closePath();
+      fillStroke(ctx, '#b2ebf2', 0.8);
+      ctx.fillStyle = '#e8b923';
+      ctx.fillRect(5.5, -5, 3, 1.6);
+      break;
+    case 'megaphone': // porte-voix
+      ctx.beginPath();
+      ctx.moveTo(8, -18);
+      ctx.lineTo(19, -23);
+      ctx.lineTo(19, -10);
+      ctx.lineTo(8, -14);
+      ctx.closePath();
+      fillStroke(ctx, '#d4a017', 1);
+      ctx.fillStyle = OUTLINE;
+      ctx.fillRect(9, -14, 2, 5);
+      break;
     default:
       break;
   }

@@ -5,6 +5,7 @@ import { RARITY_LABELS } from '../data/types';
 import { rocketStats } from '../economy/rocket';
 import type { SaveData } from '../save/save';
 import type { AppContext } from './app';
+import { openJimeeSheet } from './jimeeSheet';
 import { button, el, topBar } from './ui';
 
 /** Prépare la bataille à partir de la sauvegarde. `null` si aucun emplacement n'est rempli. */
@@ -63,12 +64,15 @@ export function render(root: HTMLElement, ctx: AppContext, params?: Record<strin
     dot.style.background = model.belt;
     const text = el('span', 'collection-text');
     text.append(el('strong', '', model.name), el('small', '', `${RARITY_LABELS[model.rarity]} · Niv. ${level} · ${model.description}`));
-    b.append(dot, text, el('span', 'slot-cost', `⚡ ${model.cost}`));
+    b.append(dot, text, el('span', 'slot-cost', `⚡ ${model.cost}`), el('span', 'info-dot', 'i'));
     b.addEventListener('click', () => {
-      if (save.team.includes(model.id)) return;
       const free = save.team.indexOf(null);
-      if (free === -1) return;
-      update(save.team.map((s, j) => (j === free ? model.id : s)));
+      const action = inTeam
+        ? { label: 'Retirer de l’équipe', onClick: () => update(save.team.map((s) => (s === model.id ? null : s))) }
+        : free === -1
+          ? { label: 'Équipe complète', disabled: true, onClick: () => {} }
+          : { label: 'Mettre dans l’équipe', onClick: () => update(save.team.map((s, j) => (j === free ? model.id : s))) };
+      openJimeeSheet(screen, model, level, action);
     });
     list.append(b);
   }

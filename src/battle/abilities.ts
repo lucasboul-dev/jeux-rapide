@@ -34,20 +34,47 @@ export function onDeath(state: BattleState, unit: Unit): void {
   state.events.push({ kind: 'explosion', x: unit.x, radius: ability.radius });
 }
 
-/** L'Infirmier soigne régulièrement les Jimees proches (lui compris), sans dépasser leur vie max. */
+/**
+ * Capacités périodiques : l'Infirmier soigne les Jimees proches (lui compris),
+ * le Mécano répare la fusée. Jamais au-delà du maximum.
+ */
 export function tickAbilities(state: BattleState, dt: number): void {
   for (const unit of state.units) {
     const ability = abilityOf(unit);
-    if (ability?.kind !== 'heal' || unit.hp <= 0) continue;
+    if (!ability || unit.hp <= 0 || (ability.kind !== 'heal' && ability.kind !== 'repairRocket')) continue;
     unit.abilityTimer += dt;
     if (unit.abilityTimer < ability.interval) continue;
     unit.abilityTimer -= ability.interval;
     const amount = ability.amountFactor * unit.maxHp;
-    for (const ally of unitsWithin(state, unit.side, unit.x, ability.radius)) {
-      ally.hp = Math.min(ally.maxHp, ally.hp + amount);
+    if (ability.kind === 'heal') {
+      for (const ally of unitsWithin(state, unit.side, unit.x, ability.radius)) {
+        ally.hp = Math.min(ally.maxHp, ally.hp + amount);
+      }
+      state.events.push({ kind: 'heal', x: unit.x });
+    } else {
+      state.rocketHp = Math.min(state.setup.rocket.hp, state.rocketHp + amount);
+      state.events.push({ kind: 'heal', x: ROCKET_X });
     }
-    state.events.push({ kind: 'heal', x: unit.x });
   }
+}
+
+/** Ralentit une unité ; un nouveau ralentissement remplace l'ancien s'il dure plus longtemps. */
+export function applySlow(unit: Unit, slow: { factor: number; duration: number }): void {
+  unit.slowFactor = slow.factor;
+  unit.slowTimer = Math.max(unit.slowTimer, slow.duration);
+}
+
+/** Multiplicateur de dégâts d'une unité : +bonus si un autre Jimee à aura est à portée (non cumulable). */
+export function auraMultiplier(state: BattleState, unit: Unit): number {
+  let best = 0;
+  for (const other of state.units) {
+    if (other === unit || other.side !== unit.side || other.hp <= 0) continue;
+    const ability = abilityOf(other);
+    if (ability?.kind === 'aura' && Math.abs(other.x - unit.x) <= ability.radius) {
+      best = Math.max(best, ability.damageBonus);
+    }
+  }
+  return 1 + best;
 }
 
 /** La tourelle de la fusée tire seule sur l'ennemi le plus proche à portée. */
@@ -69,7 +96,10 @@ export function tickTurret(state: BattleState, dt: number): void {
 export function landProjectile(state: BattleState, p: Projectile): boolean {
   if (p.splash === undefined) return false;
   if (p.targetId === null) damageBase(state, opponent(p.side), p.damage);
-  for (const foe of unitsWithin(state, opponent(p.side), p.toX, p.splash)) dealDamage(state, foe, p.damage);
+  for (const foe of unitsWithin(state, opponent(p.side), p.toX, p.splash)) {
+    dealDamage(state, foe, p.damage);
+    if (p.slow) applySlow(foe, p.slow);
+  }
   state.events.push({ kind: 'explosion', x: p.toX, radius: p.splash });
   return true;
 }
