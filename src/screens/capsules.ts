@@ -5,6 +5,7 @@ import { JIMEES, jimeeById } from '../data/jimees';
 import { RARITIES, RARITY_LABELS, type Rarity } from '../data/types';
 import { canPurchaseDraw, purchaseDraw, rarityOdds, type DrawOutcome } from '../economy/capsules';
 import { pick } from '../economy/rng';
+import { rocketStats } from '../economy/rocket';
 import type { SaveData } from '../save/save';
 import type { AppContext } from './app';
 import { openJimeeSheet } from './jimeeSheet';
@@ -136,7 +137,7 @@ function collection(save: SaveData, host: HTMLElement): HTMLElement {
     const level = save.collection[model.id];
     const item = el('button', `collection-item rarity-${model.rarity}${level ? '' : ' missing'}`);
     item.dataset.model = model.id;
-    item.addEventListener('click', () => openJimeeSheet(host, model, level));
+    item.addEventListener('click', () => openJimeeSheet(host, model, level, undefined, rocketStats(save.rocket).chargeMax));
     const dot = el('span', 'belt-dot');
     dot.style.background = level ? model.belt : 'transparent';
     const text = el('span', 'collection-text');

@@ -47,7 +47,7 @@ export function abilityText(model: JimeeModel, level: number): string | null {
     case 'slow':
       return `Ralentit les ennemis touchés de ${whole((1 - a.factor) * 100)} % pendant ${fr(a.duration)} s.`;
     case 'aura':
-      return `Les autres Jimees dans un rayon de ${fr(a.radius)} font +${whole(a.damageBonus * 100)} % de dégâts.`;
+      return `Lui et les Jimees dans un rayon de ${fr(a.radius)} font +${whole(a.damageBonus * 100)} % de dégâts.`;
   }
 }
 
@@ -61,7 +61,25 @@ export interface SheetAction {
  * Ouvre la fiche d'un modèle par-dessus `host`. `level` absent = modèle pas encore obtenu.
  * Renvoie une fonction qui ferme la fiche.
  */
-export function openJimeeSheet(host: HTMLElement, model: JimeeModel, level: number | undefined, action?: SheetAction): () => void {
+/** Niveau de « capacité de chargement » de la fusée nécessaire pour payer `cost`. */
+export function requiredCapacityLevel(cost: number): number {
+  const { chargeMax, chargeMaxPerLevel } = ECONOMY.rocket;
+  return cost <= chargeMax ? 1 : Math.ceil((cost - chargeMax) / chargeMaxPerLevel) + 1;
+}
+
+/** Texte d'avertissement si la jauge de la fusée est trop petite pour ce modèle, sinon `null`. */
+export function capacityWarning(model: JimeeModel, chargeMax: number | undefined): string | null {
+  if (chargeMax === undefined || model.cost <= chargeMax) return null;
+  return `Coût ${model.cost}, mais votre fusée ne contient que ${chargeMax} points : il faut la capacité de chargement au niveau ${requiredCapacityLevel(model.cost)}.`;
+}
+
+export function openJimeeSheet(
+  host: HTMLElement,
+  model: JimeeModel,
+  level: number | undefined,
+  action?: SheetAction,
+  chargeMax?: number,
+): () => void {
   host.querySelector('.sheet-overlay')?.remove();
   const overlay = el('div', 'sheet-overlay');
   const sheet = el('div', `jimee-sheet rarity-${model.rarity}`);
@@ -101,6 +119,8 @@ export function openJimeeSheet(host: HTMLElement, model: JimeeModel, level: numb
       table.append(dt, dd);
     }
     sheet.append(table);
+    const warning = capacityWarning(model, chargeMax);
+    if (warning) sheet.append(el('p', 'sheet-warning', warning));
     if (level < ECONOMY.maxLevel) {
       sheet.append(el('p', 'sheet-hint', 'Les flèches montrent le niveau suivant, obtenu en tirant un doublon au distributeur.'));
     }

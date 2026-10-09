@@ -64,11 +64,11 @@ export function applySlow(unit: Unit, slow: { factor: number; duration: number }
   unit.slowTimer = Math.max(unit.slowTimer, slow.duration);
 }
 
-/** Multiplicateur de dégâts d'une unité : +bonus si un autre Jimee à aura est à portée (non cumulable). */
+/** Multiplicateur de dégâts d'une unité : +bonus si un Jimee à aura (lui compris) est à portée (non cumulable). */
 export function auraMultiplier(state: BattleState, unit: Unit): number {
   let best = 0;
   for (const other of state.units) {
-    if (other === unit || other.side !== unit.side || other.hp <= 0) continue;
+    if (other.side !== unit.side || other.hp <= 0) continue;
     const ability = abilityOf(other);
     if (ability?.kind === 'aura' && Math.abs(other.x - unit.x) <= ability.radius) {
       best = Math.max(best, ability.damageBonus);

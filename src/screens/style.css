@@ -1065,3 +1065,18 @@ div.collection-item {
   flex-direction: column;
   gap: 8px;
 }
+
+.sheet-warning {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: rgba(228, 87, 46, 0.18);
+  border-left: 4px solid var(--red);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.capacity-warning {
+  color: var(--red) !important;
+  font-weight: 700;
+}

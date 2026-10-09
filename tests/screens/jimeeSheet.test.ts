@@ -25,9 +25,9 @@ describe('fiche de Jimee', () => {
 
   it('les capacités sont expliquées avec leurs chiffres au niveau actuel', () => {
     expect(abilityText(jimeeById('standard'), 1)).toBeNull();
-    expect(abilityText(jimeeById('mecano'), 1)).toBe('Toutes les 3 s, répare la fusée de 44 PV.');
-    expect(abilityText(jimeeById('ralentisseur'), 1)).toBe('Ralentit les ennemis touchés de 50 % pendant 2,5 s.');
-    expect(abilityText(jimeeById('contremaitre'), 1)).toBe('Les autres Jimees dans un rayon de 90 font +30 % de dégâts.');
+    expect(abilityText(jimeeById('mecano'), 1)).toBe('Toutes les 3 s, répare la fusée de 56 PV.');
+    expect(abilityText(jimeeById('ralentisseur'), 1)).toBe('Ralentit les ennemis touchés de 60 % pendant 2,5 s.');
+    expect(abilityText(jimeeById('contremaitre'), 1)).toBe('Lui et les Jimees dans un rayon de 90 font +40 % de dégâts.');
   });
 
   it('un modèle pas encore obtenu montre seulement sa rareté', () => {
@@ -44,5 +44,22 @@ describe('fiche de Jimee', () => {
     expect(host.querySelector('.jimee-sheet')).not.toBeNull();
     host.querySelector<HTMLButtonElement>('.sheet-close')!.click();
     expect(host.querySelector('.jimee-sheet')).toBeNull();
+  });
+});
+
+describe('coût trop élevé pour la fusée', () => {
+  it('prévient quand la jauge est trop petite, avec le niveau de capacité nécessaire', () => {
+    const host = document.createElement('div');
+    openJimeeSheet(host, jimeeById('blinde'), 1, undefined, 10);
+    const warning = host.querySelector('.sheet-warning')!;
+    expect(warning.textContent).toContain('14');
+    expect(warning.textContent).toContain('10');
+    expect(warning.textContent).toContain('niveau 3');
+  });
+
+  it('pas d’avertissement quand la jauge suffit', () => {
+    const host = document.createElement('div');
+    openJimeeSheet(host, jimeeById('blinde'), 1, undefined, 14);
+    expect(host.querySelector('.sheet-warning')).toBeNull();
   });
 });

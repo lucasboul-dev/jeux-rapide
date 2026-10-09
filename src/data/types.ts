@@ -22,7 +22,7 @@ export type Ability =
   | { kind: 'repairRocket'; amountFactor: number; interval: number }
   /** Les ennemis touchés avancent à `factor` × leur vitesse pendant `duration` s. */
   | { kind: 'slow'; factor: number; duration: number }
-  /** Les autres Jimees dans le rayon infligent +damageBonus (ex. 0,3 = +30 %) de dégâts. */
+  /** Les Jimees dans le rayon (lui compris) infligent +damageBonus (ex. 0,3 = +30 %) de dégâts. */
   | { kind: 'aura'; radius: number; damageBonus: number };
 
 export interface StatProfile {

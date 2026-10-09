@@ -23,10 +23,11 @@ describe('capacités', () => {
   it('le bouclier du Blindé absorbe avant les pv', () => {
     const s = createBattle(setup());
     const b = jimee(s, 'blinde', 300);
-    expect(b.shield).toBeCloseTo(b.maxHp);
+    const factor = (jimeeById('blinde').ability as { amountFactor: number }).amountFactor;
+    expect(b.shield).toBeCloseTo(factor * b.maxHp);
     dealDamage(s, b, 50);
     expect(b.hp).toBeCloseTo(b.maxHp);
-    expect(b.shield).toBeCloseTo(b.maxHp - 50);
+    expect(b.shield).toBeCloseTo(factor * b.maxHp - 50);
   });
 
   it('un coup plus fort que le bouclier entame les pv du reste', () => {
@@ -46,7 +47,7 @@ describe('capacités', () => {
     const far = dummy(s, 450);
     k.hp = 0;
     stepBattle(s, FIXED_DT);
-    const blast = 6 * k.damage;
+    const blast = (jimeeById('kamikaze').ability as { damageFactor: number }).damageFactor * k.damage;
     expect(near1.hp).toBeCloseTo(10_000 - blast);
     expect(near2.hp).toBeCloseTo(10_000 - blast);
     expect(far.hp).toBe(10_000);
@@ -57,17 +58,17 @@ describe('capacités', () => {
     const s = createBattle(setup());
     const nurse = jimee(s, 'infirmier', 200);
     nurse.speed = 0;
-    const hurt = jimee(s, 'standard', 250);
+    const heal = (jimeeById('infirmier').ability as { amountFactor: number }).amountFactor * nurse.maxHp;
+    const hurt = jimee(s, 'costaud', 250);
     hurt.speed = 0;
-    hurt.hp = hurt.maxHp - 30;
+    hurt.hp = hurt.maxHp - heal - 10;
     const almost = jimee(s, 'standard', 260);
     almost.speed = 0;
     almost.hp = almost.maxHp - 1;
-    const heal = 0.15 * nurse.maxHp;
     advanceSeconds(s, 1.9);
-    expect(hurt.hp).toBeCloseTo(hurt.maxHp - 30);
+    expect(hurt.hp).toBeCloseTo(hurt.maxHp - heal - 10);
     advanceSeconds(s, 0.2);
-    expect(hurt.hp).toBeCloseTo(hurt.maxHp - 30 + heal);
+    expect(hurt.hp).toBeCloseTo(hurt.maxHp - 10);
     expect(almost.hp).toBeCloseTo(almost.maxHp);
   });
 
@@ -182,12 +183,13 @@ describe('capacités des nouveaux modèles', () => {
     expect(10_000 - b.hp).toBeCloseTo(far.damage);
   });
 
-  it('le Contremaître ne se renforce pas lui-même', () => {
+  it('le Contremaître se renforce aussi lui-même', () => {
     const s = createBattle(setup());
     const boss = jimee(s, 'contremaitre', 300);
     boss.speed = 0;
     const a = dummy(s, 318);
+    const bonus = (jimeeById('contremaitre').ability as { damageBonus: number }).damageBonus;
     stepBattle(s, FIXED_DT);
-    expect(10_000 - a.hp).toBeCloseTo(boss.damage);
+    expect(10_000 - a.hp).toBeCloseTo(boss.damage * (1 + bonus));
   });
 });

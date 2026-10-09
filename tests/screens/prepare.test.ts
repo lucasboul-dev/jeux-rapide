@@ -74,3 +74,13 @@ describe('préparation', () => {
     expect(ctx.save.team).toEqual([null, 'lanceur', null, null]);
   });
 });
+
+describe('légendaire trop cher pour la fusée', () => {
+  it('la collection signale qu’il faut améliorer la capacité', () => {
+    const root = document.createElement('div');
+    const ctx = testContext({ ...newSave(), collection: { standard: 1, lanceur: 1, blinde: 1 } });
+    render(root, ctx, { planetId: 1 });
+    expect(root.querySelector('[data-model="blinde"]')!.textContent).toContain('Capacité insuffisante');
+    expect(root.querySelector('[data-model="standard"]')!.textContent).not.toContain('Capacité insuffisante');
+  });
+});
