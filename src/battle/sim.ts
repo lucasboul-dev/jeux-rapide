@@ -182,6 +182,7 @@ function act(state: BattleState, u: Unit, dt: number): void {
       toX: targetX,
       t: 0,
       side: u.side,
+      sourceId: u.defId,
       damage,
       targetId: target === 'base' ? null : target.id,
     };

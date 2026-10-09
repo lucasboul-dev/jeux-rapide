@@ -59,6 +59,8 @@ export interface Projectile {
   /** Avancement de 0 à 1. */
   t: number;
   side: Side;
+  /** Modèle ou ennemi qui a tiré (pour le dessin du projectile). */
+  sourceId: string;
   damage: number;
   /** Unité visée, ou `null` si c'est la base adverse. */
   targetId: number | null;

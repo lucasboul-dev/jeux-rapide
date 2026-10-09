@@ -8,10 +8,10 @@ export const JIMEES: JimeeModel[] = [
     description: 'Le modèle de base. Fonce et tape.',
   },
   {
-    id: 'lanceur', name: 'Lanceur', rarity: 'common', cost: 3, ranged: true,
+    id: 'lanceur', name: 'Archer', rarity: 'common', cost: 3, ranged: true,
     profile: { hp: 40, damage: 9, speed: 36, range: 140, attackInterval: 1.4 },
-    belt: '#3fa7d6', accessory: 'bolt',
-    description: 'Jette des boulons à distance.',
+    belt: '#3fa7d6', accessory: 'bow',
+    description: 'Tire des flèches à distance avec son arc compact.',
   },
   {
     id: 'stagiaire', name: 'Stagiaire', rarity: 'common', cost: 1, ranged: false,
@@ -54,8 +54,8 @@ export const JIMEES: JimeeModel[] = [
   {
     id: 'kamikaze', name: 'Kamikaze', rarity: 'epic', cost: 5, ranged: false,
     profile: { hp: 55, damage: 10, speed: 50, range: 18, attackInterval: 1 },
-    belt: '#e4572e', accessory: 'fuse',
-    description: 'Explose à sa mort et blesse tout autour.',
+    belt: '#e4572e', accessory: 'dynamite',
+    description: 'Fonce avec son sac de dynamite et explose à sa mort.',
     ability: { kind: 'explodeOnDeath', radius: 70, damageFactor: 6 },
   },
   {

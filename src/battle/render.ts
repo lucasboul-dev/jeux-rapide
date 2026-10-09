@@ -1,5 +1,7 @@
 import { drawEnemy } from '../art/enemies';
-import { drawJimee } from '../art/jimee';
+import { drawExplosion } from '../art/explosion';
+import { INK, drawJimee } from '../art/jimee';
+import { archerPose, explosionFrame } from '../art/poses';
 import { drawBackground, drawEnemyBase, drawRocket } from '../art/scenery';
 import { healthBar } from '../art/shapes';
 import { ENEMIES } from '../data/enemies';
@@ -21,7 +23,7 @@ interface Effect {
 const LIFETIME: Record<BattleEvent['kind'], number> = {
   hit: 0.15,
   death: 0.45,
-  explosion: 0.4,
+  explosion: 0.6,
   heal: 0.7,
   cannon: 0.55,
 };
@@ -43,11 +45,20 @@ function laneOffset(u: Unit): number {
 
 function drawUnit(ctx: CanvasRenderingContext2D, state: BattleState, u: Unit): void {
   const y = GROUND_Y + laneOffset(u);
-  const walkPhase = u.engaged ? 0 : state.time * u.speed * 0.22 + u.id;
+  const walking = !u.engaged;
+  const speed = u.slowTimer > 0 ? u.speed * u.slowFactor : u.speed;
+  const walkPhase = walking ? state.time * speed * 0.22 + u.id : 0;
   let top: number;
   if (u.side === 'jimee') {
-    drawJimee(ctx, u.x, y, jimeeById(u.defId), { facing: 1, walkPhase, scale: 1 });
-    top = y - 48;
+    const model = jimeeById(u.defId);
+    drawJimee(ctx, u.x, y, model, {
+      facing: 1,
+      walkPhase,
+      walking,
+      scale: 1,
+      archer: model.accessory === 'bow' ? archerPose(u.cooldown, u.attackInterval, u.engaged) : undefined,
+    });
+    top = y - 58;
   } else {
     drawEnemy(ctx, u.x, y, ENEMIES[u.defId], state.setup.planet.palette, { facing: -1, walkPhase });
     top = y - (u.isBoss ? 78 : 44);
@@ -60,6 +71,33 @@ function drawProjectiles(ctx: CanvasRenderingContext2D, state: BattleState): voi
   for (const p of state.projectiles) {
     const x = p.fromX + (p.toX - p.fromX) * p.t;
     const y = GROUND_Y - 24 - Math.sin(Math.PI * p.t) * 30;
+    if (p.sourceId === 'lanceur') {
+      // Flèche orientée selon sa trajectoire.
+      const dx = p.toX - p.fromX;
+      const dy = -Math.cos(Math.PI * p.t) * Math.PI * 30;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(Math.atan2(dy, dx));
+      ctx.strokeStyle = INK;
+      ctx.fillStyle = INK;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(-9, 0);
+      ctx.lineTo(4, 0);
+      ctx.moveTo(-9, 0);
+      ctx.lineTo(-11, -2);
+      ctx.moveTo(-9, 0);
+      ctx.lineTo(-11, 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(7, 0);
+      ctx.lineTo(3, -2);
+      ctx.lineTo(3, 2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+      continue;
+    }
     ctx.beginPath();
     ctx.arc(x, y, p.splash ? 4 : 2.6, 0, Math.PI * 2);
     ctx.fillStyle = p.side === 'jimee' ? (p.splash ? '#ffcc00' : '#9aa3b2') : state.setup.planet.palette.creature;
@@ -90,12 +128,12 @@ function drawEffects(ctx: CanvasRenderingContext2D, state: BattleState): void {
         ctx.arc(event.x, GROUND_Y - 14, 6 + k * 14, 0, Math.PI * 2);
         ctx.fill();
         break;
-      case 'explosion':
-        ctx.fillStyle = '#ff8a1f';
-        ctx.beginPath();
-        ctx.arc(event.x, GROUND_Y - 12, event.radius * (0.3 + 0.7 * k), 0, Math.PI * 2);
-        ctx.fill();
+      case 'explosion': {
+        const frame = explosionFrame(state.time - born, LIFETIME.explosion);
+        ctx.globalAlpha = 1;
+        if (frame !== null) drawExplosion(ctx, event.x, GROUND_Y, event.radius, frame);
         break;
+      }
       case 'heal':
         ctx.fillStyle = '#2bb673';
         ctx.font = 'bold 14px system-ui, sans-serif';

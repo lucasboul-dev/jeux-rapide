@@ -1,15 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="96" fill="#1d2340"/>
-  <!-- Jimee : tête ovale penchée, grands yeux noirs, corps rectangle blanc, ceinture, pieds ovales -->
-  <ellipse cx="190" cy="430" rx="46" ry="22" fill="#f4f1e8"/>
-  <ellipse cx="322" cy="430" rx="46" ry="22" fill="#f4f1e8"/>
-  <rect x="166" y="250" width="180" height="170" rx="22" fill="#f4f1e8"/>
-  <rect x="166" y="352" width="180" height="26" fill="#ff8a1f"/>
-  <g transform="rotate(-12 256 160)">
-    <ellipse cx="256" cy="160" rx="108" ry="92" fill="#f4f1e8"/>
-    <ellipse cx="216" cy="156" rx="20" ry="30" fill="#111"/>
-    <ellipse cx="296" cy="156" rx="20" ry="30" fill="#111"/>
-    <circle cx="222" cy="144" r="6" fill="#fff"/>
-    <circle cx="302" cy="144" r="6" fill="#fff"/>
+  <!-- Un Jimee : grosse tête ovale penchée, grands yeux noirs en amande, corps arrondi, ceinture -->
+  <g stroke="#15151c" stroke-width="16" stroke-linejoin="round">
+    <ellipse cx="200" cy="452" rx="44" ry="22" fill="#fbfaf5"/>
+    <ellipse cx="300" cy="452" rx="44" ry="22" fill="#fbfaf5"/>
+    <rect x="186" y="258" width="128" height="196" rx="48" fill="#fbfaf5"/>
+    <g transform="translate(276 170) rotate(24)">
+      <ellipse rx="104" ry="126" fill="#fbfaf5"/>
+    </g>
+  </g>
+  <rect x="190" y="372" width="120" height="24" fill="#ff8a1f"/>
+  <g transform="translate(276 170) rotate(24)" fill="#15151c">
+    <ellipse cx="2" cy="22" rx="32" ry="54" transform="rotate(-7 2 22)"/>
+    <ellipse cx="66" cy="18" rx="28" ry="50" transform="rotate(3 66 18)"/>
   </g>
 </svg>

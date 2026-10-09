@@ -35,10 +35,10 @@ export interface StatProfile {
 
 export type Accessory =
   | 'none'
-  | 'bolt'
+  | 'bow'
   | 'helmet'
   | 'sneakers'
-  | 'fuse'
+  | 'dynamite'
   | 'cross'
   | 'plate'
   | 'antenna'
